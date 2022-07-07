@@ -1,1 +1,0 @@
-IntuneWinAppUtil.exe -c "StandbyToCustom/Git" -s "StandbyToCustom/Git/sources/Git.exe" -o Packaged

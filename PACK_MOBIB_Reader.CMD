@@ -1,1 +1,0 @@
-IntuneWinAppUtil.exe -c "StandbyToCustom/MOBIB_Reader" -s "StandbyToCustom/MOBIB_Reader/sources/MOBIB_Reader.exe" -o Packaged

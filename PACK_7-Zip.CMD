@@ -1,1 +1,0 @@
-IntuneWinAppUtil.exe -c "StandbyToCustom/7-Zip" -s "StandbyToCustom/7-Zip/sources/7-Zip.exe" -o Packaged

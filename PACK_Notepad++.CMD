@@ -1,1 +1,0 @@
-IntuneWinAppUtil.exe -c "StandbyToCustom/Notepad++" -s "StandbyToCustom/Notepad++/sources/Notepad++.exe" -o Packaged

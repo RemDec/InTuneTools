@@ -1,1 +1,0 @@
-IntuneWinAppUtil.exe -c "StandbyToCustom/Phish Alert" -s "StandbyToCustom/Phish Alert/sources/Phish Alert.msi" -o Packaged

@@ -1,1 +1,0 @@
-IntuneWinAppUtil.exe -c "StandbyToCustom/Postman" -s "StandbyToCustom/Postman/sources/Postman.exe" -o Packaged
