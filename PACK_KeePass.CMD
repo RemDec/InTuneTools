@@ -1,0 +1,1 @@
+IntuneWinAppUtil.exe -c "StandbyToCustom/KeePass" -s "StandbyToCustom/KeePass/sources/KeePass.exe" -o Packaged

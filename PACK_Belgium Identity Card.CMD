@@ -1,0 +1,1 @@
+IntuneWinAppUtil.exe -c "StandbyToCustom/Belgium Identity Card" -s "StandbyToCustom/Belgium Identity Card/sources/Belgium Identity Card.exe" -o Packaged
