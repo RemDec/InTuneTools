@@ -2,6 +2,8 @@
 
 from pathlib import Path
 from uninstaller_list import UNINSTALLERS
+import shutil
+import argparse
 
 dir_to_package = Path("./ToPackage")
 dir_to_package.mkdir(exist_ok=True)
@@ -37,7 +39,8 @@ def uninstall_cmd(software_name, installer_type):
 def detect_cmd(software_name):
     uninstaller = UNINSTALLERS.get(software_name)
     if uninstaller:
-        return r'if ((Test-Path -Path "%s")) { exit 0 } else { exit 1 }' % uninstaller
+        out_txt = "%s detected thanks to %s !" % (software_name, uninstaller)  # mandatory along with exit code
+        return r'if ((Test-Path -Path "%s")) { write-output "%s"; exit 0 } else { exit 1 }' % (uninstaller, out_txt)
     return None
 
 
@@ -73,23 +76,30 @@ def prepare_packages(installers):
 
 
 def clean_dirs():
-    in_standby = dir_standby.glob('*/')
-    in_packaged_intunewin = dir_packaged.glob('*.intunewin')
-    in_packaged_ps1 = dir_packaged.glob('DETECT*.ps1')
-    pack_CMDs = Path('./').glob('PACK*.CMD')
-    print(list(in_standby))
-    print(list(in_packaged_intunewin), list(in_packaged_ps1))
-    print(list(pack_CMDs))
+    in_standby = list(dir_standby.glob('*/'))
+    in_packaged_intunewin = list(dir_packaged.glob('*.intunewin'))
+    in_packaged_ps1 = list(dir_packaged.glob('DETECT*.ps1'))
+    pack_CMDs = list(Path('./').glob('PACK*.CMD'))
     print("Cleaning InStandby folder...")
-    [shutil.rmtree(d) for d in in_standby]
+    [shutil.rmtree(str(d)) for d in in_standby]
 
     print("Cleaning PACK_* snippet files ...")
-    [shutil.rmtree(d) for d in pack_CMDs]
+    [f.unlink() for f in pack_CMDs]
 
     print("Cleaning resulting packaged files ...")
-    [shutil.rmtree(d) for d in list(in_packaged_ps1) + list(in_packaged_intunewin)]
+    [f.unlink() for f in in_packaged_ps1 + in_packaged_intunewin]
 
 
 if __name__ == '__main__':
-    #prepare_packages(list_installers())
-    clean_dirs()
+    desc = "InTune packager tool"
+    parser = argparse.ArgumentParser(description=desc)
+
+    parser.add_argument("-c", "--clean", action="store_true", help="Clean the create files/directories after a run")
+
+    args = parser.parse_args()
+    if args.clean:
+        clean_dirs()
+    else:
+        prepare_packages(list_installers())
+
+
