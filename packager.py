@@ -7,7 +7,7 @@ dir_to_package = Path("./ToPackage")
 dir_to_package.mkdir(exist_ok=True)
 
 dir_standby = Path("./StandbyToCustom")
-dir_to_package.mkdir(exist_ok=True)
+dir_standby.mkdir(exist_ok=True)
 
 dir_packaged = Path("./Packaged")
 dir_packaged.mkdir(exist_ok=True)
@@ -19,7 +19,7 @@ def list_installers():
 
 def install_cmd(software_name, installer_type):
     if installer_type == ".exe":
-        return '"%%~dp0sources\%s%s" /s' % (software_name, installer_type)
+        return '"%%~dp0sources\%s%s" /S' % (software_name, installer_type)
     elif installer_type == ".msi":
         return 'MsiExec.exe /i "sources\%s%s" /qn' % (software_name, installer_type)
 
@@ -72,5 +72,24 @@ def prepare_packages(installers):
             detection_script.write_text(detect_command)
 
 
+def clean_dirs():
+    in_standby = dir_standby.glob('*/')
+    in_packaged_intunewin = dir_packaged.glob('*.intunewin')
+    in_packaged_ps1 = dir_packaged.glob('DETECT*.ps1')
+    pack_CMDs = Path('./').glob('PACK*.CMD')
+    print(list(in_standby))
+    print(list(in_packaged_intunewin), list(in_packaged_ps1))
+    print(list(pack_CMDs))
+    print("Cleaning InStandby folder...")
+    [shutil.rmtree(d) for d in in_standby]
+
+    print("Cleaning PACK_* snippet files ...")
+    [shutil.rmtree(d) for d in pack_CMDs]
+
+    print("Cleaning resulting packaged files ...")
+    [shutil.rmtree(d) for d in list(in_packaged_ps1) + list(in_packaged_intunewin)]
+
+
 if __name__ == '__main__':
-    prepare_packages(list_installers())
+    #prepare_packages(list_installers())
+    clean_dirs()
