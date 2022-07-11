@@ -11,6 +11,9 @@ dir_to_package.mkdir(exist_ok=True)
 dir_standby = Path("./StandbyToCustom")
 dir_standby.mkdir(exist_ok=True)
 
+dir_history = Path("./PackagingHistory")
+dir_history.mkdir(exist_ok=True)
+
 dir_packaged = Path("./Packaged")
 dir_packaged.mkdir(exist_ok=True)
 
@@ -26,26 +29,26 @@ def install_cmd(software_name, installer_type):
         return 'MsiExec.exe /i "sources\%s%s" /qn' % (software_name, installer_type)
 
 def uninstall_cmd(software_name, installer_type):
-    uninstall_info = UNINSTALLERS.get(software_name)
-    if installer_type == ".exe":
-        if uninstall_info:
-            return r'"%s" /S' % uninstall_info
+    uninst_by_file = UNINSTALLERS['files'].get(software_name)
+    uninst_by_guid = UNINSTALLERS['guid'].get(software_name)
+    if uninst_by_file:
+        return r'"%s" /S' % uninst_by_file
+    elif uninst_by_guid:
+        return r'MsiExec /X "{%s}" /QN' % uninst_by_guid
+    else:
         return r'"C:\Program Files (x86)\%s\uninst.exe" /S' % software_name
-    elif installer_type == ".msi":
-        if uninstall_info:
-            return r'MsiExec /x "{%s}" /qn' % uninstall_info
-        return 'MsiExec /x "{GUID}" /qn'
 
 def detect_cmd(software_name):
-    uninstaller = UNINSTALLERS.get(software_name)
+    uninstaller = UNINSTALLERS['files'].get(software_name)
     if uninstaller:
         out_txt = "%s detected thanks to %s !" % (software_name, uninstaller)  # mandatory along with exit code
         return r'if ((Test-Path -Path "%s")) { write-output "%s"; exit 0 } else { exit 1 }' % (uninstaller, out_txt)
     return None
 
 
-def package_cmd(dir_package, installer_target):
-    return 'IntuneWinAppUtil.exe -c "%s" -s "%s" -o Packaged' % (dir_package, installer_target)
+def package_cmd(dir_package, software_name, installer_target):
+    copy_to_history = 'xcopy /e /v /y "%s" "%s";' % (dir_package, (dir_history / software_name))
+    return copy_to_history + 'IntuneWinAppUtil.exe -c "%s" -s "%s" -o Packaged' % (dir_package, installer_target)
 
 def prepare_packages(installers):
     for installer in installers:
@@ -67,7 +70,7 @@ def prepare_packages(installers):
         uninstall_script.write_text(uninstall_cmd(software_name, installer_type))
         # create the snippet to launch later after finetuning to package towards .intunewin
         package_script = Path("PACK_" + software_name + ".CMD")
-        package_script.write_text(package_cmd(dir_package, installer_target))
+        package_script.write_text(package_cmd(dir_package, software_name, installer_target))
         # create the detection script to provide to InTune
         detect_command = detect_cmd(software_name)
         if detect_command:
