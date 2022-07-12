@@ -47,7 +47,7 @@ def detect_cmd(software_name):
 
 
 def package_cmd(dir_package, software_name, installer_target):
-    copy_to_history = 'xcopy /e /v /y "%s" "%s";' % (dir_package, (dir_history / software_name))
+    copy_to_history = 'xcopy /e /v /y /I "%s" "%s" & ' % (dir_package, (dir_history / software_name))
     return copy_to_history + 'IntuneWinAppUtil.exe -c "%s" -s "%s" -o Packaged' % (dir_package, installer_target)
 
 def prepare_packages(installers):
