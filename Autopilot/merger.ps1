@@ -1,0 +1,1 @@
+Get-ChildItem -Filter Autopilots\*.csv | Select-Object -ExpandProperty FullName | Import-Csv | Export-Csv MergedAutopilots.csv -NoTypeInformation -Append
