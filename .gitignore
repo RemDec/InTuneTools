@@ -1,8 +1,8 @@
-Packaged/*
-StandbyToCustom/*
-PackagingHistory/*
-ToPackage/*
-PACK*
+Packager/Packaged/*
+Packager/StandbyToCustom/*
+Packager/PackagingHistory/*
+Packager/ToPackage/*
+Packager/PACK*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
