@@ -23,14 +23,16 @@ Python >= 3.5 workflow to ease and semi-automate the process of packaging batch 
 - [uninstaller.py](Packager/uninstaller.py) : a registry for uninstallation techniques specific to each software you want to package (either by uninstaller file or by software GUID) that will help to pre-generate stuff to wrap up
 - [packager.py](Packager/packager.py) : the tool to launch once you've put all your installers (`.exe`, `.msi`) in the directory `ToPackage`, will pre-generate stuff to wrap up later in a directory `StandbyToCustom` (package structure, scripts)
 
-Of course, before packaging an app you should test (un)installation manually and be aware of its specificities.
+Of course, before packaging an app you should test (un)installation manually and be aware of its specificities. Once done, proceed to the following steps :
 
-- [Pre-step] Test a manual install of the softwares to package, provide in the config file [uninstaller.py](Packager/uninstaller.py) the way to uninstall it (either by GUID or directly pointing to the uninstaller file). If you don't know, put `None` but you'll loose part of automation. Put a key mapping exactly the name of the installer.
+1. [Pre-step] Test a manual install of the softwares to package, provide in the config file [uninstaller.py](Packager/uninstaller.py) the way to uninstall it (either by GUID or directly pointing to the uninstaller file). If you don't know, put `None` but you'll loose part of automation. Put a key mapping exactly the name of the installer.
 
-- Put all the installers (`.exe`/`.msi`) you want to package in the directory `ToPackage\` with an explicit name (try to use the same than when installed on the system in the `C:\Program Files\SoftwareName` if possible) mapping a key in [uninstaller.py](Packager/uninstaller.py)
+1. Put all the installers (`.exe`/`.msi`) you want to package in the directory `ToPackage\` with an explicit name (try to use the same than when installed on the system in the `C:\Program Files\SoftwareName` if possible) mapping a key in [uninstaller.py](Packager/uninstaller.py)
 
-- Launch the [packager.py](Packager/packager.py) that will create a `PACK_SoftwareName.CMD` script in current directory and under the directory   `StandbyToCustom\` a new named directory for every installer, with the pre-filled package structure and scripts in it
+1. Launch the [packager.py](Packager/packager.py) that will create a `PACK_SoftwareName.CMD` script in current directory and under the directory   `StandbyToCustom\` a new named directory for every installer, with the pre-filled package structure and scripts in it
 
-- For the next package you want to wrap up, browse the created package structure and test the `(Un)Install.CMD` scripts (as admin), tweak them if necessary. 
+1. For the next package you want to wrap up, browse the created package structure and test the `(Un)Install.CMD` scripts (as admin), tweak them if necessary. For example, an `.exe` installation isn't standardized, to install silenlty as InTune requires you may put a flag that can be `/S`, `/VERYSILENT`, `/QUIET`, ... edit the `.CMD` files in consequence, don't hesitate to launch it to test
 
-- Wrap up the software by launching `PACK_SoftwareName.CMD`, then a `SoftwareName.intunewin` archive is created under `Packaged\` along with a `DETECT_SoftwareName.ps1` script potentially uploadable to InTune (may be to tweak as well)
+1. Once (un)install works, wrap up the software by launching `PACK_SoftwareName.CMD`, then a `SoftwareName.intunewin` archive is created under `Packaged\` along with a `DETECT_SoftwareName.ps1` script potentially uploadable to InTune (may be to tweak as well)
+
+Now you should create a new app in the InTune portal and upload the generated `.intunewin`, in the install/uninstall command fields put `Install.CMD` and `UnInstall.CMD`. You may use `DETECT_SoftwareName.ps1` for detecting rule if needed.
