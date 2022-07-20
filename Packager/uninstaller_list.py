@@ -7,6 +7,8 @@ UNINSTALLERS = {
         "Notepad++": r'C:\Program Files\Notepad++\uninstall.exe',
         "Postman": None, # Squirrel installation -> use special cmd Update.exe --uninstall
         "WinSCP": r'C:\Program Files (x86)\WinSCP\unins000.exe',
+        "Tricentis Tosca": r'C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\intune_installer.exe',  # Uninstall can only be done from original installer
+        "Azure Storage Explorer": r'C:\Program Files (x86)\Microsoft Azure Storage Explorer\unins000.exe',
     },
     'guid': {
         "PuTTY": r'E078C644-A120-4668-AD62-02E9FD530190',
@@ -16,5 +18,8 @@ UNINSTALLERS = {
         "Avaya IX Workplace": r'7BE3AB6A-04A5-4C2C-A23A-942CCBFE0F43',
         "Phish Alert": r'F3E990F3-6238-4294-97E6-DD252C1F2BCB',
         "LogMeInRescueTechnicianConsole": r'A2AF44DC-528E-4A70-A3D6-8C4C4AEDDB7C',
+        "Tricentis Tosca": r'271A70F0-5455-46E3-ADD8-83254D249DE0',  # For detection only, because the intune_installer isn't removed at uninstall so not good candidate
+        "Azure CLI": r'229AC774-AB39-4D59-9BD1-87E5BD6DB346',
+        "Azure Storage Emulator": r'41AC2282-F083-4495-8306-2D6ABC7D5CA2',
     }
 }
