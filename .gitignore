@@ -1,7 +1,6 @@
 Packager/Packaged/*
 Packager/StandbyToCustom/*
 Packager/PackagingHistory/*
-Packager/ToPackage/*
 Packager/PACK_*
 
 # Byte-compiled / optimized / DLL files
