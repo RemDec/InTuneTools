@@ -15,3 +15,22 @@ Scripts to allow quick registration of Windows devices in InTune (meaning comput
 2. Repeat the operation for each machine in your batch to register
 
 Once done, plug in the USB in any usable machine, open up a powershell and `cd D:\`, then launch the script `merger.ps1`. In the same directory, the final file `MergedAutopilots.csv` is generated, you can upload it to Intune.
+
+## Packager
+
+Python >= 3.5 workflow to ease and semi-automate the process of packaging batch of applications for InTune.
+- [IntuneWinAppUtil.exe](Packager/IntuneWinAppUtil.exe) : the [Win32 Content Prep Tool](https://github.com/Microsoft/Microsoft-Win32-Content-Prep-Tool) written by Microsoft to wrap up sources
+- [uninstaller.py](Packager/uninstaller.py) : a registry for uninstallation techniques specific to each software you want to package (either by uninstaller file or by software GUID) that will help to pre-generate stuff to wrap up
+- [packager.py](Packager/packager.py) : the tool to launch once you've put all your installers (`.exe`, `.msi`) in the directory `ToPackage`, will pre-generate stuff to wrap up later in a directory `StandbyToCustom` (package structure, scripts)
+
+Of course, before packaging an app you should test (un)installation manually and be aware of its specificities.
+
+- [Pre-step] Test a manual install of the softwares to package, provide in the config file [uninstaller.py](Packager/uninstaller.py) the way to uninstall it (either by GUID or directly pointing to the uninstaller file). If you don't know, put `None` but you'll loose part of automation. Put a key mapping exactly the name of the installer.
+
+- Put all the installers (`.exe`/`.msi`) you want to package in the directory `ToPackage\` with an explicit name (try to use the same than when installed on the system in the `C:\Program Files\SoftwareName` if possible) mapping a key in [uninstaller.py](Packager/uninstaller.py)
+
+- Launch the [packager.py](Packager/packager.py) that will create a `PACK_SoftwareName.CMD` script in current directory and under the directory   `StandbyToCustom\` a new named directory for every installer, with the pre-filled package structure and scripts in it
+
+- For the next package you want to wrap up, browse the created package structure and test the `(Un)Install.CMD` scripts (as admin), tweak them if necessary. 
+
+- Wrap up the software by launching `PACK_SoftwareName.CMD`, then a `SoftwareName.intunewin` archive is created under `Packaged\` along with a `DETECT_SoftwareName.ps1` script potentially uploadable to InTune (may be to tweak as well)
